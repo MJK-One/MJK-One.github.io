@@ -1,16 +1,16 @@
 ---
-title: "JWT Authentication with Spring Security 6"
-description: "A clean implementation of stateless JWT auth in Spring Security 6 — filter chain, token provider, and refresh token strategy."
+title: "Spring Security 6로 JWT 인증 구현하기"
+description: "Spring Security 6 환경에서 Stateless JWT 인증을 깔끔하게 구현하는 방법 — 필터 체인, 토큰 발급, 리프레시 토큰 전략까지"
 pubDate: 2026-01-08
 category: "architecture"
 tags: ["Spring Boot", "Spring Security", "JWT", "Java"]
 ---
 
-## Spring Security 6 Changes
+## Spring Security 6의 변경점
 
-Spring Security 6 removed the `WebSecurityConfigurerAdapter` class. Configuration is now done via a `SecurityFilterChain` bean. If you're migrating from an older project, this is the first thing to update.
+Spring Security 6에서 `WebSecurityConfigurerAdapter`가 제거되었습니다. 이제 설정은 `SecurityFilterChain` Bean으로 합니다. 예전 프로젝트를 마이그레이션한다면 이 부분부터 바꿔야 합니다.
 
-## Project Structure
+## 프로젝트 구조
 
 ```
 auth/
@@ -30,8 +30,8 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    private static final long ACCESS_TOKEN_EXPIRY = 1000L * 60 * 30;     // 30 min
-    private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 7; // 7 days
+    private static final long ACCESS_TOKEN_EXPIRY  = 1000L * 60 * 30;          // 30분
+    private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 7; // 7일
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -141,8 +141,10 @@ public class SecurityConfig {
 }
 ```
 
-## Refresh Token Strategy
+## 리프레시 토큰 전략
 
-Store refresh tokens in the database (not in-memory) so they survive restarts and can be revoked. On `/api/auth/refresh`, validate the stored token, issue a new access token, and optionally rotate the refresh token too.
+리프레시 토큰은 인메모리가 아닌 **DB에 저장**하세요. 서버 재시작 후에도 유지되고, 필요할 때 강제 만료(로그아웃, 탈취 대응)도 가능합니다.
 
-Never store tokens in `localStorage` on the frontend — `httpOnly` cookies are the safer choice for web clients.
+`/api/auth/refresh` 요청 시 저장된 토큰을 검증하고, 새 액세스 토큰을 발급합니다. 보안을 더 강화하려면 리프레시 토큰도 매번 교체(Rotation)하세요.
+
+프론트엔드에서 토큰을 `localStorage`에 저장하는 건 XSS에 취약합니다. 웹 클라이언트라면 `httpOnly` 쿠키를 사용하세요.

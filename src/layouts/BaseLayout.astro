@@ -6,13 +6,13 @@ interface Props {
   description?: string;
 }
 
-const { title, description = "Minjun's dev blog — Spring Backend Developer" } = Astro.props;
+const { title, description = "minjun.log — Spring Backend Developer" } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const currentPath = Astro.url.pathname;
+const p = Astro.url.pathname;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,24 +21,29 @@ const currentPath = Astro.url.pathname;
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
     <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- theme flash prevention -->
+    <script is:inline>
+      (function() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
   </head>
   <body>
+
     <nav>
-      <div class="nav-inner">
-        <a href="/" class="nav-brand">minjun.log</a>
+      <a href="/" class="nav-logo">minjun<span>.log</span></a>
+      <div class="nav-right">
         <ul class="nav-links">
-          <li><a href="/" class={currentPath === '/' ? 'active' : ''}>home</a></li>
-          <li><a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>blog</a></li>
-          <li><a href="/about" class={currentPath === '/about' ? 'active' : ''}>about</a></li>
+          <li><a href="/"          class={p === '/'            ? 'active' : ''}>home</a></li>
+          <li><a href="/blog"      class={p.startsWith('/blog') ? 'active' : ''}>blog</a></li>
+          <li><a href="/about"     class={p === '/about'        ? 'active' : ''}>about</a></li>
+          <li><a href="/portfolio" class={p === '/portfolio'    ? 'active' : ''}>portfolio</a></li>
         </ul>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span id="themeIcon">☀</span>
+        </button>
       </div>
     </nav>
 
@@ -46,8 +51,25 @@ const currentPath = Astro.url.pathname;
       <slot />
     </main>
 
-    <footer>
-      <p>© 2026 minjun.log · Built with Astro</p>
-    </footer>
+    <footer>© 2026 minjun.log · Built with Astro</footer>
+
+    <script is:inline>
+      const btn  = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+      const html = document.documentElement;
+
+      function syncIcon() {
+        icon.textContent = html.getAttribute('data-theme') === 'dark' ? '☀' : '☾';
+      }
+      syncIcon();
+
+      btn.addEventListener('click', () => {
+        const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        syncIcon();
+      });
+    </script>
+
   </body>
 </html>

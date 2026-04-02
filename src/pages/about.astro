@@ -2,48 +2,69 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const techStack = [
-  { category: 'Backend', items: ['Java', 'Spring Boot', 'Spring Security', 'Spring Data JPA'] },
-  { category: 'Database', items: ['MySQL', 'PostgreSQL', 'Oracle', 'Redis'] },
-  { category: 'Frontend', items: ['JavaScript', 'HTML', 'CSS'] },
-  { category: 'DevOps / Infra', items: ['Docker', 'AWS', 'GitHub Actions'] },
-  { category: 'Tools', items: ['Git', 'IntelliJ IDEA', 'Claude'] },
+  { category: 'Backend', items: [
+    { name: 'Java',             color: 'to' },
+    { name: 'Spring Boot',      color: 'tg' },
+    { name: 'Spring Security',  color: 'tb' },
+    { name: 'Spring Data JPA',  color: 'tv' },
+  ]},
+  { category: 'Database', items: [
+    { name: 'MySQL',      color: 'to' },
+    { name: 'PostgreSQL', color: 'tc' },
+    { name: 'Oracle',     color: 'tp' },
+    { name: 'Redis',      color: 'tp' },
+  ]},
+  { category: 'Frontend', items: [
+    { name: 'JavaScript', color: 'to' },
+    { name: 'HTML',       color: 'tp' },
+    { name: 'CSS',        color: 'tb' },
+  ]},
+  { category: 'DevOps / Infra', items: [
+    { name: 'Docker',         color: 'tc' },
+    { name: 'AWS',            color: 'to' },
+    { name: 'GitHub Actions', color: 'tg' },
+  ]},
+  { category: 'Tools', items: [
+    { name: 'Git',          color: 'tp' },
+    { name: 'IntelliJ IDEA',color: 'tv' },
+    { name: 'Claude',       color: 'tb' },
+  ]},
 ];
 ---
 
-<BaseLayout title="About — minjun.log" description="About Minjun — Spring Backend Developer">
+<BaseLayout title="소개 — minjun.log" description="민준 소개 — Spring 백엔드 개발자">
   <div class="page-wrapper">
+
     <section class="about-hero">
-      <div class="about-label">about</div>
-      <h1>Minjun (민준)</h1>
+      <h1>Minjun <span class="name-en"> </span></h1>
       <p class="about-role">Spring Backend Developer</p>
     </section>
 
     <div class="about-content">
 
       <section class="about-section">
-        <h2>Who I am</h2>
+        <h2>Introduction</h2>
         <p>
-          I'm a Spring Backend Developer who has led every team project I've been a part of.
-          Taking ownership comes naturally to me — from system design decisions to making sure
-          teammates stay aligned and unblocked. I believe a great backend engineer isn't just
-          about clean code, but about clear communication and reliable delivery.
+          지금까지 참여한 모든 팀 프로젝트에서 조장을 맡아온 Spring 백엔드 개발자입니다.
+          책임감 있게 프로젝트를 이끌고, 팀원들이 막히지 않도록 소통하는 것을 중요하게 생각합니다.
         </p>
         <p>
-          My stack centers around <strong>Java & Spring Boot</strong>, building RESTful APIs,
-          managing data with relational databases and Redis caching, and shipping with Docker and AWS.
-          I care about code that's maintainable, systems that scale, and teams that work well together.
+          좋은 백엔드 개발자는 코드를 잘 짜는 것을 넘어,
+          <strong>명확한 소통과 안정적인 결과물</strong>로 팀에 기여해야 한다고 믿습니다.
+          Java &amp; Spring Boot를 중심으로 RESTful API 설계부터 데이터베이스 설계,
+          Redis 캐싱, Docker와 AWS를 활용한 배포까지 경험했습니다.
         </p>
       </section>
 
       <section class="about-section">
-        <h2>What I do</h2>
+        <h2>What I Do</h2>
         <ul class="about-list">
-          <li>Design and build RESTful backend APIs with Java & Spring Boot</li>
-          <li>Lead team projects — planning, task distribution, code review</li>
-          <li>Set up CI/CD pipelines with GitHub Actions and Docker</li>
-          <li>Optimize queries and design schemas across MySQL, PostgreSQL, Oracle</li>
-          <li>Implement caching strategies with Redis for performance</li>
-          <li>Deploy and manage services on AWS (EC2, RDS, S3)</li>
+          <li>Java &amp; Spring Boot 기반 RESTful API 설계 및 구현</li>
+          <li>팀 프로젝트 리딩 — 기획, 역할 분배, 코드 리뷰</li>
+          <li>GitHub Actions + Docker를 활용한 CI/CD 파이프라인 구성</li>
+          <li>MySQL, PostgreSQL, Oracle 스키마 설계 및 쿼리 최적화</li>
+          <li>Redis 캐싱 전략으로 API 응답 성능 개선</li>
+          <li>AWS (EC2, RDS, S3) 배포 및 인프라 관리</li>
         </ul>
       </section>
 
@@ -52,9 +73,11 @@ const techStack = [
         <div class="stack-grid">
           {techStack.map(group => (
             <div class="stack-group">
-              <h3>{group.category}</h3>
+              <span class="stack-category">{group.category}</span>
               <div class="stack-tags">
-                {group.items.map(item => <span class="tag">{item}</span>)}
+                {group.items.map(item => (
+                  <span class={`tag ${item.color}`}>{item.name}</span>
+                ))}
               </div>
             </div>
           ))}
@@ -63,13 +86,14 @@ const techStack = [
 
       <section class="about-section">
         <h2>Links</h2>
-        <div class="links-grid">
-          <a href="https://github.com/MJK-One" target="_blank" rel="noopener" class="link-card">
-            <span class="link-icon">⌥</span>
-            <div>
-              <div class="link-title">GitHub</div>
-              <div class="link-sub">github.com/MJK-One</div>
-            </div>
+        <div class="links-list">
+          <a href="https://github.com/MJK-One" target="_blank" rel="noopener" class="link-row">
+            <span class="link-label">GitHub</span>
+            <span class="link-url">github.com/MJK-One</span>
+          </a>
+          <a href="https://onedrinkim.tistory.com/m" target="_blank" rel="noopener" class="link-row">
+            <span class="link-label">Tistory</span>
+            <span class="link-url">onedrinkim.tistory.com</span>
           </a>
         </div>
       </section>
@@ -79,142 +103,147 @@ const techStack = [
 </BaseLayout>
 
 <style>
-  .about-hero {
-    padding: 4rem 0 2.5rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 3rem;
-  }
+.about-hero {
+  padding: 3.5rem 0 2.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2.5rem;
+}
 
-  .about-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
-  }
+.about-hero h1 {
+  font-family: 'JetBrains Mono', 'Noto Sans KR', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
 
-  .about-hero h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    margin-bottom: 0.4rem;
-  }
+.name-en {
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
 
-  .about-role {
-    font-size: 1rem;
-    color: var(--text-muted);
-  }
+.about-role {
+  font-family: 'JetBrains Mono', 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  color: var(--text-muted);
+}
 
-  .about-content {
-    padding-bottom: 4rem;
-    max-width: 660px;
-  }
+.about-content {
+  max-width: 620px;
+  padding-bottom: 5rem;
+}
 
-  .about-section {
-    margin-bottom: 2.75rem;
-  }
+.about-section {
+  margin-bottom: 2.5rem;
+}
 
-  .about-section h2 {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
+.about-section h2 {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
 
-  .about-section p {
-    font-size: 0.925rem;
-    color: #333;
-    line-height: 1.8;
-    margin-bottom: 1rem;
-  }
+.about-section p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.85;
+  margin-bottom: 0.85rem;
+  word-break: keep-all;
+}
 
-  .about-section p strong {
-    color: var(--text);
-    font-weight: 600;
-  }
+.about-section p strong {
+  color: var(--text);
+  font-weight: 600;
+}
 
-  .about-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
+.about-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
 
-  .about-list li {
-    font-size: 0.9rem;
-    color: #333;
-    padding-left: 1rem;
-    position: relative;
-  }
+.about-list li {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  padding-left: 1.1rem;
+  position: relative;
+  line-height: 1.6;
+  word-break: keep-all;
+}
 
-  .about-list li::before {
-    content: '·';
-    position: absolute;
-    left: 0;
-    color: var(--text-muted);
-  }
+.about-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
 
-  .stack-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
+.stack-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
 
-  .stack-group h3 {
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.03em;
-  }
+.stack-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
 
-  .stack-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
+.stack-category {
+  font-family: 'JetBrains Mono', 'Noto Sans KR', sans-serif;
+  font-size: 11px;
+  color: var(--text-dim);
+  min-width: 110px;
+  padding-top: 3px;
+  flex-shrink: 0;
+}
 
-  .links-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
+.stack-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
 
-  .link-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    transition: border-color 0.15s;
-  }
+.links-list {
+  display: flex;
+  flex-direction: column;
+}
 
-  .link-card:hover {
-    border-color: #aaa;
-  }
+.link-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: opacity 0.15s;
+}
+.link-row:hover { opacity: 0.7; }
 
-  .link-icon {
-    font-size: 1.25rem;
-    width: 2rem;
-    text-align: center;
-    color: var(--text-muted);
-  }
+.link-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  min-width: 70px;
+}
 
-  .link-title {
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 0.1rem;
-  }
+.link-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}
 
-  .link-sub {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
+@media (max-width: 480px) {
+  .stack-group { flex-direction: column; gap: 0.4rem; }
+  .stack-category { min-width: auto; }
+}
 </style>

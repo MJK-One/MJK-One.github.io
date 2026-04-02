@@ -7,11 +7,13 @@ const recentPosts = allPosts
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 4);
 
-const skills = [
-  'Java', 'Spring Boot', 'JavaScript', 'HTML', 'CSS',
-  'Redis', 'MySQL', 'PostgreSQL', 'Oracle',
-  'Docker', 'AWS', 'Git', 'GitHub Actions', 'Claude', 'IntelliJ',
-];
+const catColor: Record<string, string> = {
+  'Spring Boot': 'tb', Java: 'tb', JPA: 'tb', 'Spring Security': 'tb',
+  Redis: 'tp', MySQL: 'tg', PostgreSQL: 'tc', Oracle: 'tg',
+  Docker: 'tc', AWS: 'to', 'GitHub Actions': 'tg',
+  JavaScript: 'to', JWT: 'tv', Architecture: 'tv',
+  performance: 'tp', devops: 'tc', architecture: 'tv', troubleshooting: 'tp',
+};
 
 const roles = ['Spring Backend Developer', 'Team Leader', 'Problem Solver'];
 ---
@@ -19,203 +21,372 @@ const roles = ['Spring Backend Developer', 'Team Leader', 'Problem Solver'];
 <BaseLayout title="minjun.log — Spring Backend Developer">
   <div class="page-wrapper">
 
-    <!-- Hero -->
+    <!-- ── Hero ──────────────────────────── -->
     <section class="hero">
-      <div class="hero-text">
-        <p class="hero-greeting">Hello, I'm</p>
-        <h1 class="hero-name">Minjun.</h1>
+
+      <!-- 왼쪽: 텍스트 -->
+      <div class="hero-left">
         <p class="hero-role">
-          <span id="typewriter"></span><span class="cursor">|</span>
+          <span class="role-prefix">$ </span>
+          <span id="typewriter"></span><span class="cursor">_</span>
         </p>
+
+        <h1 class="hero-name">Minjun.</h1>
+
+        <div class="hero-stack">
+          <span class="stack-item">Java</span><span class="sep">·</span>
+          <span class="stack-item">Spring Boot</span><span class="sep">·</span>
+          <span class="stack-item">Docker</span><span class="sep">·</span>
+          <span class="stack-item">AWS</span><span class="sep">·</span>
+          <span class="stack-item">Redis</span><span class="sep">·</span>
+          <span class="stack-item">MySQL / PostgreSQL</span>
+        </div>
+
         <p class="hero-bio">
-          Every team's go-to backend developer — leads with responsibility,
-          builds with Java &amp; Spring, communicates with clarity.
+          팀이 생기면 <strong class="hl">자연스럽게 앞에 서는 편</strong>입니다.<br />
+          코드 짜는 것만큼 <strong class="hl">같이 일하는 것</strong>을 중요하게 생각하고,<br />
+          <strong class="hl">Spring Boot</strong> 기반 위에 — 설계부터 배포까지 직접 챙깁니다.
         </p>
-        <div class="hero-skills">
-          {skills.map(s => <span class="tag">{s}</span>)}
-        </div>
+
         <div class="hero-actions">
-          <a href="/about" class="btn btn-primary">About Me</a>
-          <a href="https://github.com/MJK-One" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
-          <a href="/blog" class="btn btn-ghost">Blog</a>
+          <a href="/about"     class="btn btn-about">About</a>
+          <a href="https://github.com/MJK-One" target="_blank" rel="noopener" class="btn btn-github">GitHub</a>
+          <a href="/portfolio" class="btn btn-portfolio">Portfolio</a>
+          <a href="https://onedrinkim.tistory.com/m" target="_blank" rel="noopener" class="btn btn-tistory">Tistory</a>
         </div>
+      </div>
+
+      <!-- 오른쪽: 프로필 사진 + rotating glow -->
+      <div class="hero-right">
+        <div class="profile-wrapper">
+          <div class="profile-glow"></div>
+          <img src="/profile.jpg" alt="Minjun" class="profile-img" />
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── Explore ──────────────────────────── -->
+    <section class="explore-section">
+      <span class="section-label">Explore</span>
+      <div class="explore-grid">
+
+        <a href="/blog?cat=troubleshooting" class="explore-card">
+          <div class="explore-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </div>
+          <div>
+            <p class="explore-title">TroubleShooting</p>
+            <p class="explore-desc">기술 선택의 이유, 시행착오, 개선 과정을 기록</p>
+          </div>
+        </a>
+
+        <a href="/blog?cat=performance" class="explore-card">
+          <div class="explore-icon explore-icon--perf">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div>
+            <p class="explore-title">Performance</p>
+            <p class="explore-desc">병목을 찾고, 수치로 증명하고, 다시 짠 기록</p>
+          </div>
+        </a>
+
       </div>
     </section>
 
-    <!-- Recent Posts -->
+    <!-- ── Recent Posts ───────────────────── -->
     <section class="posts-section">
       <div class="section-header">
-        <h2>Recent Posts</h2>
-        <a href="/blog">all posts →</a>
+        <span class="section-label">Recent Posts</span>
+        <a href="/blog" class="section-link">All Posts →</a>
       </div>
-      <hr class="divider" />
+      <hr class="divider" style="margin-bottom:0" />
 
-      <div class="posts-list">
-        {recentPosts.map(post => (
-          <a href={`/blog/${post.slug}`} class="post-card-link">
-            <article class="post-card">
-              <div class="post-meta">
-                <span class="tag">{post.data.category}</span>
-                <span class="post-date">
-                  {post.data.pubDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </span>
+      <ul class="post-list">
+        {recentPosts.map(post => {
+          const d = post.data.pubDate;
+          const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+          return (
+            <li class="post-item">
+              <div class="post-top">
+                <a href={`/blog/${post.slug}`} class="post-title">{post.data.title}</a>
+                <span class="post-date">{dateStr}</span>
               </div>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
+              <p class="post-excerpt">{post.data.description}</p>
               <div class="post-tags">
-                {post.data.tags.map(tag => <span class="tag">{tag}</span>)}
+                <span class={`tag ${catColor[post.data.category] ?? 'tb'}`}>{post.data.category}</span>
+                {post.data.tags.slice(0, 3).map(tag =>
+                  <span class={`tag ${catColor[tag] ?? 'tb'}`}>{tag}</span>
+                )}
               </div>
-            </article>
-          </a>
-        ))}
-      </div>
+            </li>
+          );
+        })}
+      </ul>
     </section>
 
   </div>
 </BaseLayout>
 
 <script define:vars={{ roles }}>
-  let roleIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
+  let ri = 0, ci = 0, del = false;
   const el = document.getElementById('typewriter');
-
   function type() {
-    const current = roles[roleIndex];
-    if (isDeleting) {
-      el.textContent = current.slice(0, charIndex--);
-    } else {
-      el.textContent = current.slice(0, charIndex++);
-    }
-
-    let delay = isDeleting ? 50 : 90;
-
-    if (!isDeleting && charIndex > current.length) {
-      delay = 1800;
-      isDeleting = true;
-    } else if (isDeleting && charIndex < 0) {
-      isDeleting = false;
-      roleIndex = (roleIndex + 1) % roles.length;
-      delay = 400;
-    }
-
+    const cur = roles[ri];
+    el.textContent = del ? cur.slice(0, ci--) : cur.slice(0, ci++);
+    let delay = del ? 45 : 85;
+    if (!del && ci > cur.length) { delay = 2000; del = true; }
+    else if (del && ci < 0) { del = false; ri = (ri + 1) % roles.length; delay = 400; }
     setTimeout(type, delay);
   }
-
   type();
 </script>
 
 <style>
-  /* Hero */
+/* ── Hero layout ─────────────────────────── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4rem;
+  padding: 5rem 0 4rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+
+.hero-left {
+  min-width: 0;
+}
+
+.hero-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+.hero-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  min-height: 1.6rem;
+}
+
+.role-prefix { color: var(--accent); }
+
+.cursor {
+  animation: blink 1s step-end infinite;
+  color: var(--accent);
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.hero-bio {
+  font-size: 0.925rem;
+  color: var(--text-muted);
+  max-width: 460px;
+  line-height: 1.95;
+  margin-bottom: 1.5rem;
+  word-break: keep-all;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+  font-style: normal;
+}
+
+.hero-stack {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+.stack-item { color: var(--accent); }
+.hero-stack .sep { color: var(--accent-2); opacity: 0.5; }
+
+.hero-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+.btn-about     { background: var(--accent);   color: #0d0f1a; }
+.btn-about:hover { opacity: 0.85; }
+.btn-github    { background: rgba(192,153,255,.18); border-color: rgba(192,153,255,.35); color: var(--accent-2); }
+.btn-github:hover { background: rgba(192,153,255,.28); }
+.btn-portfolio { background: rgba(134,225,252,.12); border-color: rgba(134,225,252,.28); color: #86e1fc; }
+.btn-portfolio:hover { background: rgba(134,225,252,.22); }
+.btn-tistory   { background: rgba(255,199,119,.12); border-color: rgba(255,199,119,.28); color: #ffc777; }
+.btn-tistory:hover { background: rgba(255,199,119,.22); }
+
+[data-theme="light"] .btn-github    { background: rgba(119,51,187,.08); border-color: rgba(119,51,187,.25); color: #6622aa; }
+[data-theme="light"] .btn-portfolio { background: rgba(0,150,180,.08);  border-color: rgba(0,150,180,.25);  color: #0088aa; }
+[data-theme="light"] .btn-tistory   { background: rgba(180,100,0,.08);  border-color: rgba(180,100,0,.25);  color: #aa5500; }
+
+/* ── Profile + Glow ─────────────────────── */
+.hero-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-wrapper {
+  position: relative;
+  width: 270px;
+  height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* rotating gradient glow — solid 선 없음, blob과 동기화 */
+.profile-glow {
+  position: absolute;
+  inset: -4px;
+  background: conic-gradient(
+    from 0deg,
+    transparent        0deg,
+    var(--accent)     80deg,
+    var(--accent-2)  160deg,
+    transparent      220deg,
+    var(--accent-2)  280deg,
+    var(--accent)    340deg,
+    transparent      360deg
+  );
+  animation:
+    spin-glow 12s linear infinite,
+    blob       8s ease-in-out infinite;
+  filter: blur(8px);
+  opacity: 0.65;
+  z-index: 0;
+}
+
+@keyframes spin-glow {
+  to { transform: rotate(360deg); }
+}
+
+.profile-img {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  object-position: center top;
+  position: relative;
+  z-index: 1;
+  animation: blob 8s ease-in-out infinite;
+}
+
+@keyframes blob {
+  0%, 100% { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; }
+  20%       { border-radius: 60% 40% 55% 45% / 45% 60% 40% 55%; }
+  40%       { border-radius: 45% 55% 40% 60% / 55% 40% 60% 45%; }
+  60%       { border-radius: 58% 42% 52% 48% / 42% 58% 42% 58%; }
+  80%       { border-radius: 42% 58% 48% 52% / 58% 42% 55% 45%; }
+}
+
+/* ── Explore ─────────────────────────────── */
+.explore-section {
+  margin-bottom: 3rem;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.explore-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.explore-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.explore-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(130,170,255,.12);
+  border: 1px solid rgba(130,170,255,.2);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.explore-icon--perf {
+  background: rgba(255,117,127,.10);
+  border-color: rgba(255,117,127,.2);
+  color: #ff757f;
+}
+
+.explore-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.explore-desc {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .explore-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Posts ──────────────────────────────── */
+.posts-section { padding-bottom: 5rem; }
+.post-list { list-style: none; }
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 720px) {
   .hero {
-    padding: 5rem 0 4rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 3.5rem;
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2.5rem;
+    padding: 3rem 0 2.5rem;
   }
-
-  .hero-greeting {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.04em;
-  }
-
-  .hero-name {
-    font-size: 3.5rem;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1.1;
-    margin-bottom: 0.75rem;
-  }
-
-  .hero-role {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    font-weight: 400;
-    margin-bottom: 1.25rem;
-    height: 1.8rem;
-  }
-
-  .cursor {
-    animation: blink 1s step-end infinite;
-    color: var(--text);
-    font-weight: 300;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  .hero-bio {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    max-width: 520px;
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 2rem;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    display: inline-block;
-    padding: 0.55rem 1.25rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.15s;
-  }
-
-  .btn-primary {
-    background: var(--text);
-    color: #fff;
-  }
-
-  .btn-primary:hover {
-    background: #333;
-  }
-
-  .btn-ghost {
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-  }
-
-  .btn-ghost:hover {
-    border-color: #aaa;
-    color: var(--text);
-  }
-
-  /* Posts */
-  .posts-section {
-    padding-bottom: 4rem;
-  }
-
-  .post-card-link {
-    display: block;
-    color: inherit;
-  }
-
-  @media (max-width: 640px) {
-    .hero-name {
-      font-size: 2.5rem;
-    }
-    .hero {
-      padding: 3rem 0 2.5rem;
-    }
-  }
+  .hero-right   { order: -1; }
+  .hero-name    { font-size: 2.8rem; }
+  .hero-bio     { max-width: 100%; }
+  .hero-actions { justify-content: center; }
+  .hero-stack   { justify-content: center; }
+  .btn-github, .btn-portfolio, .btn-tistory { flex: 1; text-align: center; }
+}
 </style>

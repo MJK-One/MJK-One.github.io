@@ -1,0 +1,498 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    id: 'tow',
+    title: 'Ticket Open Wave!',
+    subtitle: 'TOW',
+    github: 'https://github.com/MJK-One/TOW',
+    description: '다양한 플랫폼에서 판매하는 티켓들을 한 곳에 모아 쉽고 간단한 검색만으로 원하는 티켓 오픈 정보를 쉽게 찾을 수 있는 티켓 오픈 플랫폼입니다.',
+    image: 'https://placedog.net/600/300?id=50',
+    imageAlt: '귀여운 강아지',
+    tags: [
+      { name: 'Spring Boot', color: 'tb' },
+      { name: 'Java',        color: 'tb' },
+      { name: 'Redis',       color: 'tp' },
+      { name: 'MySQL',       color: 'tg' },
+      { name: 'Docker',      color: 'tc' },
+    ],
+    detail: {
+      overview: '여러 티켓 판매 플랫폼(인터파크, 멜론티켓 등)에 흩어진 오픈 일정을 한 곳에서 검색할 수 있는 서비스입니다. 팀원 4명, 약 6주간 진행했습니다.',
+      role: [
+        '팀장으로서 전체 일정 관리 및 역할 분배',
+        'Spring Boot 기반 RESTful API 설계 및 구현',
+        'Redis를 활용한 티켓 오픈 정보 캐싱 전략 수립',
+        'Docker를 이용한 개발/배포 환경 구성',
+      ],
+      challenge: 'Redis 캐싱 도입 시 TTL 설정이 너무 짧으면 DB 부하가 다시 증가하고, 너무 길면 오픈 정보 갱신이 늦어지는 trade-off가 있었습니다.',
+      solution: '티켓 오픈 시간 기반의 동적 TTL을 계산해 오픈 1시간 전에는 TTL을 짧게, 이후에는 길게 설정하여 캐시 히트율과 데이터 정합성을 동시에 확보했습니다.',
+    },
+  },
+  {
+    id: 'bipo',
+    title: '삐뽀삐뽀',
+    subtitle: 'Emergency Platform',
+    github: 'https://github.com/MJK-One/Disaster-Aid-Platform',
+    description: '실시간 재난 발생 시 위치 기반의 긴급 지원 정보를 제공하고, 사용자 간 구조 요청 및 자원 공유를 중계하는 플랫폼입니다.',
+    image: 'https://placedog.net/600/300?id=80',
+    imageAlt: '귀여운 강아지2',
+    tags: [
+      { name: 'Spring Boot', color: 'tb' },
+      { name: 'Java',        color: 'tb' },
+      { name: 'WebSocket',   color: 'tv' },
+      { name: 'MySQL',       color: 'tg' },
+      { name: 'AWS',         color: 'to' },
+    ],
+    detail: {
+      overview: '재난 상황에서 대피소 위치, 구조 요청, 물자 공유 정보를 실시간으로 연결하는 긴급 지원 플랫폼입니다. 팀원 5명, 약 8주간 진행했습니다.',
+      role: [
+        '팀장으로서 기획 단계부터 배포까지 전체 리딩',
+        'WebSocket 기반 실시간 구조 요청 채팅 기능 구현',
+        'AWS EC2 + RDS 인프라 구성 및 배포 자동화',
+        '위치 기반 대피소 검색 API 설계 및 구현',
+      ],
+      challenge: 'WebSocket 연결이 재난 상황을 가정한 동시 접속 폭증 시나리오에서 서버 메모리가 급격히 증가하는 문제가 발생했습니다.',
+      solution: 'STOMP 프로토콜을 도입하고 메시지 브로커를 분리하여 연결을 효율적으로 관리했습니다. 또한 세션 타임아웃과 heartbeat 설정을 조정해 좀비 연결을 정리했습니다.',
+    },
+  },
+];
+---
+
+<BaseLayout title="포트폴리오 — minjun.log" description="민준의 프로젝트 포트폴리오">
+  <div class="page-wrapper">
+
+    <section class="page-header">
+      <h1><span class="h1-plain">port</span><span class="h1-accent">folio</span></h1>
+      <p class="page-desc">직접 설계하고 구현한 프로젝트들입니다.</p>
+    </section>
+
+    <hr class="divider" style="margin-bottom: 2rem" />
+
+    <div class="card-grid">
+      {projects.map(project => (
+        <article class="project-card" data-id={project.id} role="button" tabindex="0">
+
+          <!-- 카드 커버 이미지 -->
+          <div class="card-cover">
+            <img src={project.image} alt={project.imageAlt} class="card-cover-img" />
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener"
+                class="card-github-btn"
+                aria-label="GitHub 저장소"
+                onclick="event.stopPropagation()"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+              </a>
+            )}
+          </div>
+
+          <!-- 카드 본문 -->
+          <div class="card-body">
+            <h2 class="card-title">{project.title}</h2>
+            <p class="card-desc">{project.description}</p>
+            <div class="card-tags">
+              {project.tags.map(tag => (
+                <span class={`tag ${tag.color}`}>{tag.name}</span>
+              ))}
+            </div>
+            <span class="card-detail-hint">자세히 보기 →</span>
+          </div>
+
+        </article>
+      ))}
+    </div>
+
+  </div>
+
+  <!-- ── 모달 ───────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close" aria-label="닫기">✕</button>
+
+      <div class="modal-header">
+        <img class="modal-img" id="modal-img" src="" alt="" />
+        <div class="modal-title-wrap">
+          <h2 class="modal-title" id="modal-title"></h2>
+          <p class="modal-subtitle" id="modal-subtitle"></p>
+          <div class="modal-tags" id="modal-tags"></div>
+          <a class="modal-github-btn" id="modal-github" href="" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <section class="modal-section">
+          <h3 class="modal-section-title">프로젝트 개요</h3>
+          <p class="modal-text" id="modal-overview"></p>
+        </section>
+        <section class="modal-section">
+          <h3 class="modal-section-title">내가 맡은 역할</h3>
+          <ul class="modal-list" id="modal-role"></ul>
+        </section>
+        <section class="modal-section">
+          <h3 class="modal-section-title">어려웠던 점</h3>
+          <p class="modal-text" id="modal-challenge"></p>
+        </section>
+        <section class="modal-section">
+          <h3 class="modal-section-title">해결 방법</h3>
+          <p class="modal-text" id="modal-solution"></p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+</BaseLayout>
+
+<script define:vars={{ projects }}>
+  const overlay = document.getElementById('modal-overlay');
+  const modal   = document.getElementById('modal');
+  const btnClose = document.getElementById('modal-close');
+
+  function openModal(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+
+    document.getElementById('modal-img').src       = p.image;
+    document.getElementById('modal-img').alt       = p.imageAlt;
+    document.getElementById('modal-title').textContent    = p.title;
+    document.getElementById('modal-subtitle').textContent = p.subtitle;
+    document.getElementById('modal-overview').textContent  = p.detail.overview;
+    document.getElementById('modal-challenge').textContent = p.detail.challenge;
+    document.getElementById('modal-solution').textContent  = p.detail.solution;
+
+    const tagsEl = document.getElementById('modal-tags');
+    tagsEl.innerHTML = p.tags.map(t => `<span class="tag ${t.color}">${t.name}</span>`).join('');
+
+    const roleEl = document.getElementById('modal-role');
+    roleEl.innerHTML = p.detail.role.map(r => `<li>${r}</li>`).join('');
+
+    const ghBtn = document.getElementById('modal-github');
+    if (p.github) { ghBtn.href = p.github; ghBtn.style.display = 'inline-flex'; }
+    else           { ghBtn.style.display = 'none'; }
+
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('click', () => openModal(card.dataset.id));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(card.dataset.id); });
+  });
+
+  btnClose.addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+<style>
+.page-header {
+  padding: 3.5rem 0 1.75rem;
+}
+
+.page-header h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.h1-plain  { color: var(--text); }
+.h1-accent { color: var(--accent); }
+
+.page-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ── 카드 그리드 ─────────────────────────── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  padding-bottom: 5rem;
+}
+
+/* ── 카드 ────────────────────────────────── */
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.project-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* 커버 이미지 */
+.card-cover {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.card-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.card-cover:hover .card-cover-img {
+  transform: scale(1.07);
+}
+
+/* GitHub 버튼 (커버 우상단) */
+.card-github-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.85);
+  backdrop-filter: blur(4px);
+  transition: background 0.15s, color 0.15s;
+  z-index: 1;
+}
+
+.card-github-btn:hover {
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+}
+
+/* 카드 본문 */
+.card-body {
+  padding: 1.1rem 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.card-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.75;
+  word-break: keep-all;
+  flex: 1;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.card-detail-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  transition: color 0.15s;
+}
+.project-card:hover .card-detail-hint { color: var(--accent); }
+
+/* ── 모달 오버레이 ───────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── 모달 박스 ───────────────────────────── */
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  transform: translateY(20px);
+  transition: transform 0.25s;
+}
+
+.modal-overlay.active .modal {
+  transform: translateY(0);
+}
+
+.modal-close {
+  position: sticky;
+  top: 1rem;
+  float: right;
+  margin: 1rem 1rem 0 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s;
+  z-index: 10;
+}
+.modal-close:hover { border-color: var(--accent); color: var(--accent); }
+
+/* 모달 헤더 */
+.modal-header {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+
+.modal-img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.modal-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.modal-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 0.2rem;
+}
+
+.modal-github-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 0.4rem;
+  transition: opacity 0.15s;
+}
+.modal-github-btn:hover { opacity: 0.75; }
+
+/* 모달 본문 */
+.modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-text {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.85;
+  word-break: keep-all;
+}
+
+.modal-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.modal-list li {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  padding-left: 1rem;
+  position: relative;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.modal-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+/* ── 반응형 ─────────────────────────────── */
+@media (max-width: 600px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .modal-header { flex-direction: column; }
+  .modal-img { width: 100%; height: 140px; }
+}
+</style>

@@ -1,33 +1,33 @@
 ---
-title: "Dockerizing a Spring Boot App with Multi-Stage Builds"
-description: "A practical guide to containerizing Spring Boot with a slim production image using multi-stage Docker builds."
+title: "멀티 스테이지 빌드로 Spring Boot Docker 이미지 경량화하기"
+description: "멀티 스테이지 Docker 빌드로 이미지 크기를 500MB에서 150MB로 줄이는 실전 가이드"
 pubDate: 2026-02-14
 category: "devops"
-tags: ["Docker", "Spring Boot", "DevOps", "Java"]
+tags: ["Docker", "Spring Boot", "Java", "GitHub Actions"]
 ---
 
-## Why Bother with Multi-Stage Builds?
+## 왜 멀티 스테이지 빌드인가?
 
-A naive `FROM openjdk:17` image ships your entire JDK into production — bloated and unnecessary. Multi-stage builds let you compile with a full JDK and run with a lean JRE. The result: images that drop from ~500MB to ~150MB.
+단순히 `FROM openjdk:17`로 시작하면 전체 JDK가 프로덕션 이미지에 포함됩니다. 불필요하고 무겁습니다. 멀티 스테이지 빌드를 사용하면 빌드는 JDK로, 실행은 JRE만 있는 가벼운 이미지로 분리할 수 있습니다. 결과적으로 이미지 크기가 500MB에서 150MB 수준으로 줄어듭니다.
 
-## The Dockerfile
+## Dockerfile
 
 ```dockerfile
-# Stage 1: Build
+# Stage 1: 빌드
 FROM gradle:8.5-jdk17-alpine AS builder
 WORKDIR /app
 COPY build.gradle settings.gradle ./
 COPY gradle ./gradle
-# Cache dependencies first
+# 의존성 먼저 캐싱
 RUN gradle dependencies --no-daemon || true
 COPY src ./src
 RUN gradle bootJar --no-daemon -x test
 
-# Stage 2: Run
+# Stage 2: 실행
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Non-root user for security
+# 보안을 위해 non-root 유저 생성
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
@@ -37,7 +37,7 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-## docker-compose for Local Dev
+## 로컬 개발용 docker-compose
 
 ```yaml
 version: '3.8'
@@ -83,7 +83,7 @@ volumes:
 ## GitHub Actions CI/CD
 
 ```yaml
-- name: Build and push Docker image
+- name: Docker 이미지 빌드 및 푸시
   uses: docker/build-push-action@v5
   with:
     context: .
@@ -93,10 +93,10 @@ volumes:
     cache-to: type=gha,mode=max
 ```
 
-The `cache-from: type=gha` line is crucial — it caches Docker layers in GitHub Actions, cutting build times from ~3 minutes to under 45 seconds on subsequent runs.
+`cache-from: type=gha` 설정이 핵심입니다. GitHub Actions에서 Docker 레이어를 캐싱해서 이후 빌드 시간이 3분에서 45초 이하로 줄어듭니다.
 
-## Tips
+## 팁 정리
 
-- Always specify exact image versions (`:17-alpine`, not `:latest`) for reproducibility
-- Use `.dockerignore` to exclude `build/`, `.git/`, `*.md` — shaves time off the Docker context transfer
-- The non-root user (`appuser`) is a simple security hardening step most people skip; don't skip it
+- 이미지 버전은 반드시 명시하세요 (`:17-alpine`, `:latest` 금지). 재현 가능성이 중요합니다.
+- `.dockerignore`에 `build/`, `.git/`, `*.md` 등을 추가하면 Docker 컨텍스트 전송 시간을 줄일 수 있습니다.
+- non-root 유저 설정은 간단하지만 많은 분들이 빠뜨리는 보안 강화 포인트입니다. 꼭 넣으세요.

@@ -1,25 +1,25 @@
 ---
-title: "Reducing API Latency with Redis Caching in Spring Boot"
-description: "How I cut response times by 80% using Spring Cache with Redis — setup, annotations, and real-world pitfalls."
+title: "Spring Boot에서 Redis 캐싱으로 API 응답속도 80% 줄이기"
+description: "Spring Cache + Redis로 응답 시간을 80% 단축한 경험 — 설정, 어노테이션, 실전 주의사항까지"
 pubDate: 2026-03-20
 category: "performance"
-tags: ["Spring Boot", "Redis", "Caching", "Java"]
+tags: ["Spring Boot", "Redis", "Java", "Caching"]
 ---
 
-## The Problem
+## 문제 상황
 
-Our team project had a product listing API that hit the database on every request. With concurrent users, response times climbed past 400ms. The data wasn't changing frequently — a perfect candidate for caching.
+팀 프로젝트에서 상품 목록 API가 요청마다 DB를 직접 조회하고 있었습니다. 동시 접속자가 늘어나면서 응답 시간이 400ms를 넘기 시작했는데, 데이터가 자주 바뀌지 않는 구조라 캐싱을 적용하기에 딱 좋은 상황이었습니다.
 
-## Setting Up Redis Cache
+## Redis 캐시 설정
 
-First, add the dependencies to `build.gradle`:
+`build.gradle`에 의존성을 추가합니다.
 
 ```groovy
 implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 implementation 'org.springframework.boot:spring-boot-starter-cache'
 ```
 
-Then configure the cache manager:
+그다음 CacheManager를 Bean으로 등록합니다.
 
 ```java
 @Configuration
@@ -42,7 +42,7 @@ public class CacheConfig {
 }
 ```
 
-## Using Cache Annotations
+## 캐시 어노테이션 적용
 
 ```java
 @Service
@@ -66,19 +66,19 @@ public class ProductService {
 }
 ```
 
-## Key Pitfalls
+## 실전에서 주의할 점
 
-**1. Cache stampede on cold start**
-When the cache expires, multiple requests hit the DB simultaneously. Consider using a lock or `@CacheLock` strategy for high-traffic endpoints.
+**1. Cache Stampede (캐시 스탬피드)**
+캐시가 만료되는 순간 여러 요청이 동시에 DB를 때리는 현상입니다. 트래픽이 많은 엔드포인트는 분산락이나 별도 갱신 전략을 고려해야 합니다.
 
-**2. Serialization issues**
-If your cached object doesn't implement `Serializable` or lacks a default constructor, Jackson will throw on deserialization. Always test with actual objects.
+**2. 직렬화 문제**
+캐시 대상 객체가 `Serializable`을 구현하지 않거나 기본 생성자가 없으면 역직렬화 시 예외가 발생합니다. 실제 객체로 반드시 테스트해보세요.
 
-**3. TTL strategy**
-Don't use the same TTL for everything. Product listings can last 10 minutes; user session data maybe 30 seconds.
+**3. TTL 전략**
+모든 캐시에 같은 TTL을 쓰면 안 됩니다. 상품 목록은 10분, 사용자 세션 데이터는 30초처럼 데이터 특성에 맞게 나눠서 설정해야 합니다.
 
-## Result
+## 결과
 
-After caching the top 5 most-queried endpoints, average response time dropped from 420ms to ~60ms. The database load reduced by roughly 70% under load testing.
+가장 많이 조회되는 엔드포인트 5개에 캐싱을 적용하고 나서, 평균 응답 시간이 420ms에서 약 60ms로 줄었습니다. 부하 테스트 기준 DB 조회량도 70% 가까이 감소했습니다.
 
-Caching is one of the highest-ROI optimizations you can make — just be intentional about what you cache and for how long.
+캐싱은 투자 대비 효과가 가장 큰 최적화 중 하나입니다. 다만 무엇을 얼마 동안 캐시할지는 항상 신중하게 결정해야 합니다.
