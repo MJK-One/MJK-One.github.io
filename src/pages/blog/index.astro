@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allCategories = ['All', ...new Set(posts.map(p => p.data.category))];
+---
+
+<BaseLayout title="Blog — minjun.log" description="Dev blog by Minjun — Spring Backend, Architecture, DevOps">
+  <div class="page-wrapper">
+    <section class="blog-header">
+      <h1>Blog</h1>
+      <p>Thoughts on Spring, backend architecture, and dev life.</p>
+    </section>
+
+    <div class="filter-bar">
+      {allCategories.map(cat => (
+        <button class="filter-btn" data-category={cat}>
+          {cat}
+        </button>
+      ))}
+    </div>
+
+    <hr class="divider" />
+
+    <div class="posts-list" id="posts-list">
+      {posts.map(post => (
+        <a href={`/blog/${post.slug}`} class="post-card-link" data-category={post.data.category}>
+          <article class="post-card">
+            <div class="post-meta">
+              <span class="tag">{post.data.category}</span>
+              <span class="post-date">
+                {post.data.pubDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+            </div>
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+            <div class="post-tags">
+              {post.data.tags.map(tag => <span class="tag">{tag}</span>)}
+            </div>
+          </article>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const cards = document.querySelectorAll<HTMLElement>('.post-card-link');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cat = btn.dataset.category;
+      cards.forEach(card => {
+        card.style.display =
+          cat === 'All' || card.dataset.category === cat ? 'block' : 'none';
+      });
+    });
+  });
+
+  // activate All by default
+  const allBtn = document.querySelector<HTMLButtonElement>('[data-category="All"]');
+  allBtn?.classList.add('active');
+</script>
+
+<style>
+  .blog-header {
+    padding: 3.5rem 0 2rem;
+  }
+
+  .blog-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.4rem;
+  }
+
+  .blog-header p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .filter-btn:hover {
+    border-color: #aaa;
+    color: var(--text);
+  }
+
+  .filter-btn.active {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+  }
+
+  .post-card-link {
+    display: block;
+    color: inherit;
+  }
+
+  .posts-list {
+    padding-bottom: 4rem;
+  }
+</style>

@@ -1,0 +1,221 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const recentPosts = allPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+
+const skills = [
+  'Java', 'Spring Boot', 'JavaScript', 'HTML', 'CSS',
+  'Redis', 'MySQL', 'PostgreSQL', 'Oracle',
+  'Docker', 'AWS', 'Git', 'GitHub Actions', 'Claude', 'IntelliJ',
+];
+
+const roles = ['Spring Backend Developer', 'Team Leader', 'Problem Solver'];
+---
+
+<BaseLayout title="minjun.log — Spring Backend Developer">
+  <div class="page-wrapper">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-text">
+        <p class="hero-greeting">Hello, I'm</p>
+        <h1 class="hero-name">Minjun.</h1>
+        <p class="hero-role">
+          <span id="typewriter"></span><span class="cursor">|</span>
+        </p>
+        <p class="hero-bio">
+          Every team's go-to backend developer — leads with responsibility,
+          builds with Java &amp; Spring, communicates with clarity.
+        </p>
+        <div class="hero-skills">
+          {skills.map(s => <span class="tag">{s}</span>)}
+        </div>
+        <div class="hero-actions">
+          <a href="/about" class="btn btn-primary">About Me</a>
+          <a href="https://github.com/MJK-One" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
+          <a href="/blog" class="btn btn-ghost">Blog</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Posts -->
+    <section class="posts-section">
+      <div class="section-header">
+        <h2>Recent Posts</h2>
+        <a href="/blog">all posts →</a>
+      </div>
+      <hr class="divider" />
+
+      <div class="posts-list">
+        {recentPosts.map(post => (
+          <a href={`/blog/${post.slug}`} class="post-card-link">
+            <article class="post-card">
+              <div class="post-meta">
+                <span class="tag">{post.data.category}</span>
+                <span class="post-date">
+                  {post.data.pubDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+              </div>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+              <div class="post-tags">
+                {post.data.tags.map(tag => <span class="tag">{tag}</span>)}
+              </div>
+            </article>
+          </a>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<script define:vars={{ roles }}>
+  let roleIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  const el = document.getElementById('typewriter');
+
+  function type() {
+    const current = roles[roleIndex];
+    if (isDeleting) {
+      el.textContent = current.slice(0, charIndex--);
+    } else {
+      el.textContent = current.slice(0, charIndex++);
+    }
+
+    let delay = isDeleting ? 50 : 90;
+
+    if (!isDeleting && charIndex > current.length) {
+      delay = 1800;
+      isDeleting = true;
+    } else if (isDeleting && charIndex < 0) {
+      isDeleting = false;
+      roleIndex = (roleIndex + 1) % roles.length;
+      delay = 400;
+    }
+
+    setTimeout(type, delay);
+  }
+
+  type();
+</script>
+
+<style>
+  /* Hero */
+  .hero {
+    padding: 5rem 0 4rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3.5rem;
+  }
+
+  .hero-greeting {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-name {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-role {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-bottom: 1.25rem;
+    height: 1.8rem;
+  }
+
+  .cursor {
+    animation: blink 1s step-end infinite;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .hero-bio {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.55rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: #333;
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .btn-ghost:hover {
+    border-color: #aaa;
+    color: var(--text);
+  }
+
+  /* Posts */
+  .posts-section {
+    padding-bottom: 4rem;
+  }
+
+  .post-card-link {
+    display: block;
+    color: inherit;
+  }
+
+  @media (max-width: 640px) {
+    .hero-name {
+      font-size: 2.5rem;
+    }
+    .hero {
+      padding: 3rem 0 2.5rem;
+    }
+  }
+</style>

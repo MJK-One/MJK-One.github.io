@@ -1,0 +1,220 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const techStack = [
+  { category: 'Backend', items: ['Java', 'Spring Boot', 'Spring Security', 'Spring Data JPA'] },
+  { category: 'Database', items: ['MySQL', 'PostgreSQL', 'Oracle', 'Redis'] },
+  { category: 'Frontend', items: ['JavaScript', 'HTML', 'CSS'] },
+  { category: 'DevOps / Infra', items: ['Docker', 'AWS', 'GitHub Actions'] },
+  { category: 'Tools', items: ['Git', 'IntelliJ IDEA', 'Claude'] },
+];
+---
+
+<BaseLayout title="About — minjun.log" description="About Minjun — Spring Backend Developer">
+  <div class="page-wrapper">
+    <section class="about-hero">
+      <div class="about-label">about</div>
+      <h1>Minjun (민준)</h1>
+      <p class="about-role">Spring Backend Developer</p>
+    </section>
+
+    <div class="about-content">
+
+      <section class="about-section">
+        <h2>Who I am</h2>
+        <p>
+          I'm a Spring Backend Developer who has led every team project I've been a part of.
+          Taking ownership comes naturally to me — from system design decisions to making sure
+          teammates stay aligned and unblocked. I believe a great backend engineer isn't just
+          about clean code, but about clear communication and reliable delivery.
+        </p>
+        <p>
+          My stack centers around <strong>Java & Spring Boot</strong>, building RESTful APIs,
+          managing data with relational databases and Redis caching, and shipping with Docker and AWS.
+          I care about code that's maintainable, systems that scale, and teams that work well together.
+        </p>
+      </section>
+
+      <section class="about-section">
+        <h2>What I do</h2>
+        <ul class="about-list">
+          <li>Design and build RESTful backend APIs with Java & Spring Boot</li>
+          <li>Lead team projects — planning, task distribution, code review</li>
+          <li>Set up CI/CD pipelines with GitHub Actions and Docker</li>
+          <li>Optimize queries and design schemas across MySQL, PostgreSQL, Oracle</li>
+          <li>Implement caching strategies with Redis for performance</li>
+          <li>Deploy and manage services on AWS (EC2, RDS, S3)</li>
+        </ul>
+      </section>
+
+      <section class="about-section">
+        <h2>Tech Stack</h2>
+        <div class="stack-grid">
+          {techStack.map(group => (
+            <div class="stack-group">
+              <h3>{group.category}</h3>
+              <div class="stack-tags">
+                {group.items.map(item => <span class="tag">{item}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="about-section">
+        <h2>Links</h2>
+        <div class="links-grid">
+          <a href="https://github.com/MJK-One" target="_blank" rel="noopener" class="link-card">
+            <span class="link-icon">⌥</span>
+            <div>
+              <div class="link-title">GitHub</div>
+              <div class="link-sub">github.com/MJK-One</div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-hero {
+    padding: 4rem 0 2.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .about-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .about-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    margin-bottom: 0.4rem;
+  }
+
+  .about-role {
+    font-size: 1rem;
+    color: var(--text-muted);
+  }
+
+  .about-content {
+    padding-bottom: 4rem;
+    max-width: 660px;
+  }
+
+  .about-section {
+    margin-bottom: 2.75rem;
+  }
+
+  .about-section h2 {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .about-section p {
+    font-size: 0.925rem;
+    color: #333;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .about-section p strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .about-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .about-list li {
+    font-size: 0.9rem;
+    color: #333;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .about-list li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  .stack-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .stack-group h3 {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .stack-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .links-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.15s;
+  }
+
+  .link-card:hover {
+    border-color: #aaa;
+  }
+
+  .link-icon {
+    font-size: 1.25rem;
+    width: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .link-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.1rem;
+  }
+
+  .link-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+</style>
