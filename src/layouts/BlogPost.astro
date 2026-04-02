@@ -95,7 +95,7 @@ const catColor: Record<string, string> = {
 }
 
 .post-body :global(h2) {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'Noto Sans KR', sans-serif;
   font-size: 1rem;
   font-weight: 500;
   color: var(--text);
@@ -105,7 +105,7 @@ const catColor: Record<string, string> = {
 }
 
 .post-body :global(h3) {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'Noto Sans KR', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--accent-2);
@@ -124,7 +124,7 @@ const catColor: Record<string, string> = {
 }
 
 .post-body :global(pre) {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.82rem;
   background: var(--bg-code);
   border: 1px solid var(--border);
@@ -135,8 +135,20 @@ const catColor: Record<string, string> = {
   line-height: 1.65;
 }
 
+/* pre 안의 code — 반드시 JetBrains Mono 고정 */
+.post-body :global(pre code) {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  border-radius: 0;
+}
+
+/* 인라인 코드 */
 .post-body :global(:not(pre) > code) {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.82em;
   background: var(--bg-code);
   color: #86e1fc;
@@ -159,6 +171,7 @@ const catColor: Record<string, string> = {
 
 .post-body :global(li) {
   margin-bottom: 0.4rem;
+  font-family: 'JetBrains Mono', 'Noto Sans KR', sans-serif;
 }
 
 .post-body :global(blockquote) {
@@ -167,6 +180,7 @@ const catColor: Record<string, string> = {
   margin: 1.5rem 0;
   color: var(--text-dim);
   font-style: italic;
+  font-family: 'JetBrains Mono', 'Noto Sans KR', sans-serif;
 }
 
 .post-body :global(a) {
