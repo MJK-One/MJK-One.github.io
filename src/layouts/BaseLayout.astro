@@ -33,14 +33,8 @@ const p = Astro.url.pathname;
   <body>
 
     <nav>
-      <a href="/" class="nav-logo">minjun<span>.log</span></a>
+      <a href="/" class="nav-logo">MinJun<span>.Portfolio</span></a>
       <div class="nav-right">
-        <ul class="nav-links">
-          <li><a href="/"          class={p === '/'            ? 'active' : ''}>home</a></li>
-          <li><a href="/blog"      class={p.startsWith('/blog') ? 'active' : ''}>blog</a></li>
-          <li><a href="/about"     class={p === '/about'        ? 'active' : ''}>about</a></li>
-          <li><a href="/portfolio" class={p === '/portfolio'    ? 'active' : ''}>portfolio</a></li>
-        </ul>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
           <span id="themeIcon">☀</span>
         </button>
